@@ -1,5 +1,20 @@
 # ScholoApp: a big data analytics project
 
+## Introduction to the project
+This is a demo project that represents a hypothetical situation for a company that has a web application. In general, analytics in a business setting is like the central nervous system - the task is to collect the data from the external and internal environment, process and store the data, and distribute the relevant pieces of information to all parts of the organisation. In other words, business analytics is instrumental for survival in a competitive business environment. 
+
+As organisations grow, so does the complexity and mass of the available data. We are headed towards Big Data. At that point, when the data gets big arises a complication. Now, what do we mean by big?
+
+Well, if the amount of data can fit in the memory of a single computer, then we are talking about small data. Every tool under the sun, designed for data analytics can do the job, even if some of them might be an overkill for the task.
+
+If the amount of data does not fit in memory of a single computer, but do fit in the hard disk, then we are in the territory of medium data. In that case we can use a database, we can process the data in smaller batches, or we can add more memory.
+
+When the data do not fit in memory, nor in the hard disk, the above solutions do not work anymore.
+
+That is where solutions like Apache Spark, that allow distributed computations, and distributed databases like MongoDB get into the picture. Although the data we use in this demo is definitely small, it the kind (user data) that can quickly grow big. In the section on the infrastructure, you can find more details about the proposed solution for tackling the 'Big' part of the problem.
+
+Let us now take a look at the demo environment and its data.
+
 ## The ScholoApp Data Challenge
 
 The Scholomance is a Magical School for Wizard children ( our story is adapted from the novel [`A Deadly Education`](https://en.wikipedia.org/wiki/A_Deadly_Education) by Naomi Novik ) ; it is meant to be a safe haven where wizard children can learn magic in a safer environment, until they are able to defend themselves. Maleficaria, or "mals", the mana-eating monsters, are particularly attracted to young sorcerers just after puberty, and ninety-five percent of magic children do not survive to adulthood. 
@@ -30,7 +45,7 @@ Given the data, we have three main objectives:
 
     - Which students, with respect seniority, are the most active?
 
-- 2 We would like to define a series of useful metrics on user engagement and capture them into a dashboard.
+- 2 We would like to define a series of useful metrics on user engagement, analyse them and represent them graphically.
 
 - 3 We would like to prepare a presentation for the business stakeholders where we communicate our main findings.
 
