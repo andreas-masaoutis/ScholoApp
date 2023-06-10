@@ -2,7 +2,4 @@ pandas
 numpy
 matplotlib
 pyarrow
-koalas
-keras
-elephas
-
+jupyter-dash
