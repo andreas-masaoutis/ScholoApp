@@ -9,8 +9,7 @@ ENV SPARK_EXECUTOR_CORES=1
 COPY ./resources/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy examples python files into container
-COPY ./examples/ /home/examples/
+# Copy properties files into container
 COPY ./resources/log4j.properties ./resources/spark-defaults.conf $SPARK_HOME/conf/
 
 EXPOSE 4040 8888
