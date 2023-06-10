@@ -2,4 +2,6 @@ pandas
 numpy
 matplotlib
 pyarrow
+pymongo
+notebook
 jupyter-dash
