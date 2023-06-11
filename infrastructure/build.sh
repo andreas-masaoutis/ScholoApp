@@ -21,4 +21,4 @@ docker build \
 ## The MongoDB instance
 docker build \
   -f Dockerfile_mongo \
-  -t mongo:6.0.6 .
+  -t mongo:latest .
