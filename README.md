@@ -49,3 +49,12 @@ Given the data, we have three main objectives:
 
 - 3 We would like to prepare a presentation for the business stakeholders where we communicate our main findings.
 
+
+## Known limitations
+Please, do not use this as anything else than an introduction to Spark deployed with Docker. In the infrastructure/infrastructure.md one can find a list of proper resources on the subject.
+
+Here is a list of known limitations:
+- We use dockerfiles that are not optimised. For example, we have added Scala although we are not planning on using it, and we haven't cleared the pip cache after installation. We should refactor the dockerfiles
+- We use Spark 3.4 with Python 3.7, the support for which is deprecated. We should bump up the Python version.
+- Instead of utilising the 'Mongo Connector for Spark', which for some reason we could not get it up and running, we use pymongo. If the data becomes properly big, this would be a bottleneck. Operations on MongoDB using pymongo, like selecting documents from a collection, should either be done iteratively, load into Spark document after document, which would be slower, or in batches loaded into Pandas dataframes first- limited by the available RAM on the node running the Jupyter notebook. We should make the connector work.
+- Right now we have not set-up MongoDB to have proper replicas, so we are still operating on medium-sized data, instead of properly big data. We should add the replica docker containers.
