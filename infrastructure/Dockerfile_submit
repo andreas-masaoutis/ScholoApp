@@ -16,4 +16,7 @@ EXPOSE 4040 8888
 
 WORKDIR /home/
 
+## Move that into the requirements, once sure it is needed
+RUN pip install wget
+
 CMD jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=
