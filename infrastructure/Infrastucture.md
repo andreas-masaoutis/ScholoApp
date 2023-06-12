@@ -61,6 +61,10 @@ We have created five Dockerfiles with the templates for the various containers t
 - The submit is where the context for the application is being defined and through which the user interacts with the cluster. For us this will be through a Jupyter notebook.
 - The mongo will create the database container
 
+
+NOTE: If you make any changes, please make sure that the versions of the various pieces of software are compatible.
+In our case we use Python 3.7, Scala 2.12, Spark 3.4.0, Hadoop 3, pymongo 4.3.3, and MongoDB 6.0.6. The requirements file, with the python libraries, is left without specified versions so that changing the python version will not create conflicts with not supported library versions. This choice has the downside that the code might stop working with newer library versions.
+
 #### The images
 With
 ```
@@ -141,6 +145,16 @@ docker run -dit --name container_name --network newly_created_network --entrypoi
 Now, on the second machine, one can see the newly_created_network in the list of networks. One can also verify that the newly_created_network has the same network ID in both machines; it is the same network.
 
 
+### Step 4: Create the volume
+
+We are going to use a MongoDB database for storing data, but since the container amd all its data will be gone every time the container will be removed, we need a way to persist the database data. Docker does so with volumes. These are like named 'disks' saved internally by Docker, that are being mapped to a specific folder on a container.
+
+```
+docker volume create desired_volume_name
+```
+
+For our purposes, we named the new volume mymongo_volume, and it will be mapped to /data/db by using the flag '-v mymongo_volume:/data/db'. The /data/db is the place where MongoDB saves the actual database, so whenever we start a mongo container with this flag, it will load the saved data from the docker volume inside the container. Any changes within the container will be persisted in the volume. In this way our database will persist.
+
 ### Step 5: Initialise the containers
 
 
@@ -160,7 +174,7 @@ docker network create --driver overlay --attachable spark-net
 ```
 3. Run a spark_master image to create a master container
 ``` 
-docker run -it --name spark-master --network spark-net -p 8080:8080 spark_master:latest
+docker run -it --rm --name spark-master --network spark-net -p 8080:8080 spark-master:latest
 ```
 *NOTE: it is important to remember the name of this container (spark-master in this case) as this is what other containers in the network will use to resolve its IP address.
 
@@ -168,8 +182,7 @@ docker run -it --name spark-master --network spark-net -p 8080:8080 spark_master
 
 5. Now, on the other machines you can create one or more worker containers, by using 
 ``` 
-docker run -it --name spark-workerX --network spark-net -p 8081:8081 -e MEMORY=1G -e CORES=1 spark_worker:latest
-
+docker run -it --rm --name spark-workerX --network spark-net -p 8081:8081 -e MEMORY=1G -e CORES=1 spark-worker:latest
 ```
 NOTE: For each worker, increment the name by 1. For as long each worker is located on different machines, you can map port of the container to the port of the host machine (-p 8081:8081 {host/container} ) without having to increment them as they are located on different host's. If, for some reason you need to have more workers on the same machine, then you need to increment the port numbering (like -p 8082:8081), since the 8081 port on the host is already in use by the previous worker.
     
@@ -177,7 +190,12 @@ NOTE: For each worker, increment the name by 1. For as long each worker is locat
 
 7. Now we also need a spark-submit container with the Jupyter interface to communicate with the spark master ans submit jobs
 ``` 
-docker run -it --name spark-submit --network spark-net -p 4040:4040 - p 8888:8888 spark_submit:latest
+docker run -it --rm --name spark-submit --network spark-net -p 4040:4040 -p 8888:8888 spark-submit:latest
 ```
 
+8. Next we will need to add the data persistence to the mix; in our case MongoDB.
+
+```
+docker run -it --rm --name mymongo --network spark-net -p 27017:27017 -v mymongo_volume:/data/db mongo:5
+```
 
